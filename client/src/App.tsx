@@ -57,12 +57,22 @@ export default function App() {
       .get(`${url}/chatgpt/getchats/${auth.apiKey}`)
       .then((res) => {
         const processed = res.data.texts.map(
-          (item: { message: string; textBy: number; _id: string }) => {
+          (item: { content: string; role: string; _id: string }) => {
+            let img = undefined;
+            switch (item.role) {
+              case "user": 
+                img = auth?.avatar;
+                break;
+              case "system": 
+                img = "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Identicon.svg/1200px-Identicon.svg.png";
+                break; 
+            }
+
             return {
-              msg: item.message,
-              me: item.textBy == 1,
+              msg: item.content,
+              me: item.role === "user",
               _id: item._id,
-              img: item.textBy == 1 ? auth?.avatar : undefined,
+              img: img
             };
           }
         );

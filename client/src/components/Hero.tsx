@@ -1,4 +1,3 @@
-import React from "react";
 import { alert, sun, thunder } from "../assets/icons";
 
 export default function Hero() {

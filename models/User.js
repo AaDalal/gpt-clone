@@ -18,15 +18,16 @@ const userSchema = new mongoose.Schema(
     },
     password: {
       type: String,
+      required: true,
       min: 6,
     },
     apiKey: {
       type: String,
       required: true,
     },
-    queries: {
+    chats: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Query",
+      ref: "Chat",
     },
   },
   { timestamps: true }

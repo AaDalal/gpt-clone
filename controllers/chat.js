@@ -1,27 +1,25 @@
-const Query = require("../models/Query");
+const Chat = require("../models/Chat");
 const { createCompletionChatGTP } = require("../chatGTP");
 const { v4: uuid } = require("uuid");
 
 exports.chat = async (req, res) => {
   try {
     const tempId = uuid();
-    await Query.updateOne(
+
+    const { message } = req.body;
+    await Chat.updateOne(
       { _id: req.queryId },
-      { $push: { texts: { message: req.body.message, textBy: 1 } } }
+      { $push: { messages: message } }
     );
-    const { data } = await createCompletionChatGTP({
-      message: req.body.message,
-    });
-    await Query.updateOne(
+
+    const { choices } = await createCompletionChatGTP({ message: req.body.message });
+    await Chat.updateOne(
       { _id: req.queryId },
-      {
-        $push: {
-          texts: { message: data.choices[0]?.text, textBy: 0 },
-        },
-      }
+      { $push: { messages: choices[0]?.message } }
     );
+    
     res.send({
-      message: data.choices[0]?.text,
+      message: choices[0]?.message,
       _id: data.choices[0] ? tempId : undefined,
     });
   } catch (err) {
@@ -31,11 +29,10 @@ exports.chat = async (req, res) => {
 
 exports.getAllChats = async (req, res) => {
   try {
-    const query = await Query.findOne({ _id: req.queryId });
-    if (!query)
-      return res
-        .status(400)
-        .send({ success: false, message: "Query doesn't exist" });
+    const chat = await Chat.findOne({ _id: req.queryId });
+    if (!chat) return res
+      .status(400)
+      .send({ success: false, message: "Query doesn't exist" });
     res.send(query);
   } catch (err) {
     res.status(400).send({ success: false, message: err.message });
