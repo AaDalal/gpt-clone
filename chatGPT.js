@@ -15,7 +15,8 @@ async function completeViaChatGPT({ messages }) {
     messages: messages,
     max_tokens: 150,
   });
-  console.log(completion);
+  console.log("completion");
+  console.log(completion)
   return completion;
 }
 
