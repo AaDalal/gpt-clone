@@ -3,7 +3,6 @@ const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
 });
 const openai = new OpenAIApi(configuration);
-console.log(configuration)
 
 /**
  * @param {Object} param0
@@ -11,13 +10,11 @@ console.log(configuration)
  * @returns Chat completion response
  */
 async function completeViaChatGPT({ messages }) {
-  console.log(messages)
   const completion = await openai.createChatCompletion({
     model: "gpt-3.5-turbo",
     messages: messages,
     max_tokens: 150,
   });
-  console.log(completion.data.choices[0])
   return completion;
 }
 
