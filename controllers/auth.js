@@ -1,5 +1,5 @@
 const { hashSync, compareSync } = require("bcrypt");
-const Query = require("../models/Chat");
+const Chat = require("../models/Chat");
 const User = require("../models/User");
 const { generateApiKey } = require("generate-api-key");
 const { v4: uuid } = require("uuid");
@@ -27,14 +27,16 @@ exports.login = async (req, res) => {
 
 exports.signup = async (req, res) => {
   try {
-    const newQuery = new Query({ texts: [] });
+    const newQuery = new Chat({ 
+      messages: [] 
+    });
     const { _id } = await newQuery.save();
     const newUser = new User({
       uid: uuid(),
       ...req.body,
       password: hashSync(req.body.password, 10),
       apiKey: generateApiKey({ method: "bytes" }),
-      queries: _id,
+      chats: _id,
     });
     const user = await newUser.save();
 

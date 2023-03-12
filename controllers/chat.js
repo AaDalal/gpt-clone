@@ -1,5 +1,5 @@
 const Chat = require("../models/Chat");
-const { createCompletionChatGTP } = require("../chatGTP");
+const { completeViaChatGPT } = require("../chatGPT");
 const { v4: uuid } = require("uuid");
 
 exports.chat = async (req, res) => {
@@ -8,19 +8,19 @@ exports.chat = async (req, res) => {
 
     const { message } = req.body;
     await Chat.updateOne(
-      { _id: req.queryId },
+      { _id: req.chatId },
       { $push: { messages: message } }
     );
 
-    const { choices } = await createCompletionChatGTP({ message: req.body.message });
+    const { data: { choices } } = await completeViaChatGPT({ messages: [message] });
     await Chat.updateOne(
-      { _id: req.queryId },
-      { $push: { messages: choices[0]?.message } }
+      { _id: req.chatId },
+      { $push: { messages: choices?.at(0)?.message } }
     );
     
     res.send({
       message: choices[0]?.message,
-      _id: data.choices[0] ? tempId : undefined,
+      _id: choices[0] ? tempId : undefined,
     });
   } catch (err) {
     res.status(400).send({ success: false, message: err.message });
@@ -29,11 +29,11 @@ exports.chat = async (req, res) => {
 
 exports.getAllChats = async (req, res) => {
   try {
-    const chat = await Chat.findOne({ _id: req.queryId });
+    const chat = await Chat.findOne({ _id: req.chatId });
     if (!chat) return res
       .status(400)
-      .send({ success: false, message: "Query doesn't exist" });
-    res.send(query);
+      .send({ success: false, message: "Chat doesn't exist" });
+    res.send(chat);
   } catch (err) {
     res.status(400).send({ success: false, message: err.message });
   }

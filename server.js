@@ -1,5 +1,4 @@
 require("dotenv").config();
-const { completeViaChatGPT: createCompletionChatGTP } = require("./chatGPT");
 const express = require("express");
 const cors = require("cors");
 const authRouter = require("./routers/auth");
