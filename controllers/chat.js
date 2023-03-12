@@ -15,7 +15,7 @@ exports.chat = async (req, res) => {
     const { data: { choices } } = await completeViaChatGPT({ messages: [message] });
     await Chat.updateOne(
       { _id: req.chatId },
-      { $push: { messages: choices?.at(0)?.message } }
+      { $push: { messages: choices.at(0)?.message } }
     );
     
     res.send({
