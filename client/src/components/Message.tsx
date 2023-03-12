@@ -1,8 +1,8 @@
 import React from "react";
-import { Message as MessageProps } from "../App";
+import { MessageProp } from "../App";
 import { logo } from "../assets/icons";
 
-export default function Message({ me, msg, img }: MessageProps) {
+export default function Message({ me, msg, img }: MessageProp) {
   return (
     <div
       style={{
@@ -50,7 +50,7 @@ export default function Message({ me, msg, img }: MessageProps) {
           marginTop: "6.5px",
         }}
       >
-        {msg.trim()}
+        {msg.content.trim()}
       </pre>
     </div>
   );

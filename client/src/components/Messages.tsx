@@ -1,10 +1,10 @@
-import React, { useEffect, useRef } from "react";
-import { Message as MessageType } from "../App";
-import loader from "../assets/loader.gif";
+import React, { useEffect, useRef, useState } from "react";
+import { MessageProp } from "../App";
+import { Circles } from "react-loader-spinner";
 import Message from "./Message";
 
 type MessagesProps = {
-  messages: MessageType[];
+  messages: MessageProp[];
   show: boolean;
 };
 
@@ -42,9 +42,19 @@ export default function Messages({ messages, show }: MessagesProps) {
         })}
       </>
       {show && (
-        <p style={{ textAlign: "center", margin: "28px 0", fontSize: "14px" }}>
-          <img style={{ width: "23px" }} src={loader} alt="" />
-        </p>
+          <Circles
+            height="80"
+            width="80"
+            color="#00BFFF  "
+            ariaLabel="circles-loading"
+            wrapperStyle={{
+              width: "100%",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+            wrapperClass=""
+            visible={true}
+          />
       )}
     </div>
   );

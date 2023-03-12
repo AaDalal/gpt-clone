@@ -10,7 +10,7 @@ export default function Hero() {
         width: "100%",
       }}
     >
-      <h1 style={{ marginTop: "18vh", marginBottom: "5vh" }}>ChatGPT</h1>
+      <h1 style={{ marginTop: "18vh", marginBottom: "5vh" }}>JitGPT</h1>
       <div
         className="cols"
         style={{ display: "flex", flexDirection: "row", gap: "58px" }}

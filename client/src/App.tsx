@@ -10,7 +10,12 @@ import axios from "axios";
 import { url } from "./url";
 
 export type Message = {
-  msg: string;
+  content: string;
+  role: string;
+}
+
+export type MessageProp = {
+  msg: Message;
   me?: boolean;
   img: string | undefined;
   _id: string;
@@ -28,7 +33,7 @@ type User = {
 };
 
 export default function App() {
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<MessageProp[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [chatLoading, setChatloading] = useState(true);
   const [auth, setAuth] = useState<User | undefined>(() => {
@@ -37,7 +42,7 @@ export default function App() {
     return JSON.parse(user);
   });
 
-  function addMessage(msg: Message) {
+  function addMessage(msg: MessageProp) {
     setMessages((prev) => [...prev, msg]);
   }
   function toggleLoading(value: boolean) {

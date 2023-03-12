@@ -1,11 +1,11 @@
 import axios from "axios";
 import React, { useState } from "react";
-import { Message } from "../App";
+import { Message, MessageProp } from "../App";
 import { send } from "../assets/icons";
 import { url } from "../url";
 
 type InputProps = {
-  addMessage: (msg: Message) => void;
+  addMessage: (msg: MessageProp) => void;
   toggleLoading: (value: boolean) => void;
   apiKey: string;
   img: string;
@@ -22,9 +22,12 @@ export default function Input({
   chatLoading,
 }: InputProps) {
   const [input, setInput] = useState<string>("");
+  const [selectedRole, setSelectedRole] = useState('user');
+
   function handleInput() {
+    const message: Message = { content: input, role: selectedRole}
     addMessage({
-      msg: input,
+      msg: message,
       me: true,
       img,
       _id: new Date().toString(),
@@ -34,7 +37,7 @@ export default function Input({
 
     //apiCall
     axios
-      .post(`${url}/chatgpt/chat/${apiKey}`, { message: input })
+      .post(`${url}/chatgpt/chat/${apiKey}`, { message })
       .then((resp) => {
         toggleLoading(false);
         addMessage({
@@ -68,8 +71,37 @@ export default function Input({
           flexDirection: "row",
           alignItems: "center",
           justifyContent: "space-between",
+          paddingLeft: "10px",
         }}
       >
+        <select 
+        value={selectedRole}
+        onChange={(e) => setSelectedRole(e.target.value)}
+        name="roles" 
+        id="roles"
+        style={{
+          background: "#343541",
+          fontWeight: "bold",
+          color: "white",
+          padding: "5px",
+          borderRadius: "5px",
+        }}
+        >
+          <option 
+          value="user"
+          style={{
+            margin: "5px"
+          }}
+          >
+            You
+          </option>
+          <option 
+          value="system"
+          style={{
+            margin: "5px"
+          }}
+          >System</option>
+        </select>
         <input
           disabled={chatLoading}
           autoFocus={true}
@@ -103,19 +135,6 @@ export default function Input({
           {send}
         </button>
       </div>
-      <p
-        className="hide"
-        style={{
-          fontSize: "12.6px",
-          textAlign: "center",
-          marginTop: "19px",
-          color: "rgb(185 185 185)",
-          maxWidth: "85%",
-        }}
-      >
-        ChatGPT . Free Research Preview. Our goal is to make AI systems more
-        natural and safe to interact with. Your feedback will help us improve.
-      </p>
       <p
         style={{
           fontSize: "13.5px",
